@@ -143,6 +143,20 @@ public:
         return count == 1;
     };
 
+    // Check if no player has balance
+    bool isNoPlayerLeft()
+    {
+        int count = 0;
+        for (int i = 0; i < totalPlayers; i++)
+        {
+            if (players[i].getBalance() <= 0)
+            {
+                count++;
+            }
+        }
+        return count == totalPlayers;
+    };
+
     // Player turns
     void playerTurns()
     {
@@ -240,11 +254,91 @@ public:
                 }
                 else
                 {
+                    cout << endl;
                     currentPlayer.setIsTurn(false);
                 }
             }
         }
     }
+
+    // Randomize 3 dice values from 1-6
+    vector<int> randomizeDiceValues()
+    {
+        vector<int> diceValues;
+
+        // Seed the random number generator with the current time
+        srand(static_cast<unsigned int>(std::time(nullptr)));
+
+        for (int i = 0; i < 3; i++)
+        {
+            int randomVal = (rand() % 6) + 1;
+            diceValues.push_back(randomVal);
+        }
+        return diceValues;
+    };
+
+    // Check if player guessed the number and get the bet amount, then add balance if correct, deduct balance if wrong
+    void checkPlayerGuess(const vector<int> &diceValues)
+    {
+        for (int i = 0; i < totalPlayers; i++)
+        {
+            Player &currentPlayer = players[i];
+            vector<int> correctGuesses;
+
+            // Check for wrong guesses and deduct balance
+            for (int j = 0; j < currentPlayer.getInputValues().size(); j++)
+            {
+                if (find(diceValues.begin(), diceValues.end(), currentPlayer.getInputValues()[j]) == diceValues.end())
+                {
+                    // cout << "Player " << i + 1 << " guessed the number " << diceValues[j] << " wrongly!" << endl;
+                    currentPlayer.deductBalance(currentPlayer.getBetAmounts()[j]);
+                }
+                else
+                {
+                    // Add the correct guess to the player's correct guesses
+                    correctGuesses.push_back(currentPlayer.getInputValues()[j]);
+                }
+            }
+
+            // Check for correct guesses and add balance accordingly with the dice result
+            for (int j = 0; j < correctGuesses.size(); j++)
+            {
+                // Count the number of correct guesses
+                int count = std::count(diceValues.begin(), diceValues.end(), correctGuesses[j]);
+                string abbre = "";
+
+                switch (count)
+                {
+                case 1:
+                    abbre = "once";
+                    break;
+                case 2:
+                    abbre = "twice";
+                    break;
+                case 3:
+                    abbre = "thrice";
+                    break;
+                default:
+                    abbre = "";
+                    break;
+                }
+
+                double amount = currentPlayer.getBetAmounts()[j] * count;
+                currentPlayer.addBalance(amount);
+                cout << "Player " << i + 1 << " guessed the number " << correctGuesses[j] << " correctly " << abbre << " and earned " << amount << endl;
+            }
+        }
+    }
+
+    // Reset player input values and bet amounts
+    void resetPlayerValues()
+    {
+        for (int i = 0; i < totalPlayers; i++)
+        {
+            players[i].clearInputValues();
+            players[i].clearBetAmounts();
+        }
+    };
 };
 
 class StartGame : public Game
@@ -254,6 +348,7 @@ public:
     {
         // Object instance
         Message message;
+        StyleMessage styleMessage;
         Game game;
 
         // Display heading message
@@ -272,7 +367,71 @@ public:
         // Start the game
         cout << "Game started!" << endl;
 
-        // Player turns
-        game.playerTurns();
+        // Game loop, if a player exceeds 10 times the starting balance or only one player is left, end the game
+        while (!game.isPlayerExceedsLimit() && !game.isOnePlayerLeft() && !game.isNoPlayerLeft())
+        {
+            // Player turns
+            game.playerTurns();
+
+            // Randomize dice values
+            vector<int> diceValues = game.randomizeDiceValues();
+
+            // Display dice values
+            styleMessage.randomDiceMsg(diceValues);
+
+            // Check if player guessed the number and get the bet amount, then add balance if correct, deduct balance if wrong
+            game.checkPlayerGuess(diceValues);
+
+            // Get players balance
+            game.getAllPlayersBalance();
+
+            // Reset player input values and bet amounts
+            game.resetPlayerValues();
+        }
+        cout << endl;
+
+        // Check win condition
+        if (game.isPlayerExceedsLimit())
+        {
+            // Display winner
+            cout << "================WINNER================" << endl;
+            for (int i = 0; i < game.getTotalPlayers(); i++)
+            {
+                double playerBal = game.getPlayers()[i].getBalance();
+                if (game.getPlayers()[i].getBalance() > (game.getStartingBalance() * 10))
+                {
+                    cout << "Player " << i + 1 << " is the winner with " << playerBal
+                         << endl;
+                }
+            }
+            cout << endl;
+        }
+        else if (game.isOnePlayerLeft())
+        {
+            // Display winner
+            cout << "================WINNER================" << endl;
+            for (int i = 0; i < game.getTotalPlayers(); i++)
+            {
+                double playerBal = game.getPlayers()[i].getBalance();
+                if (game.getPlayers()[i].getBalance() > 0)
+                {
+                    cout << "Player " << i + 1 << " is the winner with " << playerBal << endl
+                         << endl;
+                }
+            }
+        }
+        else if (game.isNoPlayerLeft())
+        {
+            cout << "================EVERYONE LOSES================" << endl;
+            cout << "No player has balance left!" << endl
+                 << endl;
+        }
+        else
+        {
+            cout << "Game ended!" << endl;
+        }
+
+        // Display exit message
+        message.exitMsg();
     }
 };

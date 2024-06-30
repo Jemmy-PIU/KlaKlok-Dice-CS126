@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -33,8 +34,20 @@ public:
     {
         int msgLength = msg.length();
         string msgFooter = "======" + string(msgLength, '=') + "======";
-        cout
-            << msgFooter << endl
-            << endl;
+        cout << endl
+             << msgFooter << endl
+             << endl;
+    }
+
+    void randomDiceMsg(vector<int> diceValues)
+    {
+        headingMsg("KlaKlok Dice Rolled Values");
+
+        for (int i = 0; i < diceValues.size(); i++)
+        {
+            cout << " ===> " << diceValues[i] << " <== " << endl;
+        }
+
+        footerMsg("KlaKlok Dice Rolled Values");
     }
 };
