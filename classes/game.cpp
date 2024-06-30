@@ -111,7 +111,7 @@ public:
         styleMessage.headingMsg("All Players Balance");
         for (int i = 0; i < totalPlayers; i++)
         {
-            cout << "Player " << i + 1 << " balance: " << this->players[i].getBalance() << endl;
+            cout << "Player " << i + 1 << " balance: $" << this->players[i].getBalance() << endl;
         }
         styleMessage.footerMsg("All Players Balance");
     };
@@ -400,11 +400,12 @@ public:
                 double playerBal = game.getPlayers()[i].getBalance();
                 if (game.getPlayers()[i].getBalance() > (game.getStartingBalance() * 10))
                 {
-                    cout << "Player " << i + 1 << " is the winner with " << playerBal
+                    cout << "Player " << i + 1 << " is the winner with $" << playerBal
                          << endl;
                 }
             }
-            cout << endl;
+            cout << "======================================" << endl
+                 << endl;
         }
         else if (game.isOnePlayerLeft())
         {
@@ -415,15 +416,18 @@ public:
                 double playerBal = game.getPlayers()[i].getBalance();
                 if (game.getPlayers()[i].getBalance() > 0)
                 {
-                    cout << "Player " << i + 1 << " is the winner with " << playerBal << endl
-                         << endl;
+                    cout << "Player " << i + 1 << " is the winner with $" << playerBal << endl;
                 }
             }
+            cout << "======================================" << endl
+                 << endl;
         }
         else if (game.isNoPlayerLeft())
         {
             cout << "================EVERYONE LOSES================" << endl;
-            cout << "No player has balance left!" << endl
+            cout << "All players ran out of money!" << endl;
+
+            cout << "==============================================" << endl
                  << endl;
         }
         else

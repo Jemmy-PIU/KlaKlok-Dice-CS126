@@ -17,7 +17,9 @@ public:
     {
         cout << "============================================" << endl;
         cout << "Thank you for playing KlaKlok Dice V1!" << endl;
-        cout << "============================================" << endl;
+        cout << "============================================" << endl
+             << endl
+             << endl;
     }
 };
 
@@ -34,20 +36,20 @@ public:
     {
         int msgLength = msg.length();
         string msgFooter = "======" + string(msgLength, '=') + "======";
-        cout << endl
-             << msgFooter << endl
-             << endl;
+        cout
+            << msgFooter << endl
+            << endl;
     }
 
     void randomDiceMsg(vector<int> diceValues)
     {
-        headingMsg("KlaKlok Dice Rolled Values");
+        headingMsg("KlaKlok-Dices Rolled Values");
 
         for (int i = 0; i < diceValues.size(); i++)
         {
-            cout << " ===> " << diceValues[i] << " <== " << endl;
+            cout << "=" + string(18, ' ') << diceValues[i] << string(18, ' ') + "=" << endl;
         }
 
-        footerMsg("KlaKlok Dice Rolled Values");
+        footerMsg("KlaKlok-Dices Rolled Values");
     }
 };
