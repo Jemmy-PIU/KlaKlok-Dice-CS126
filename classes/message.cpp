@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -16,7 +17,9 @@ public:
     {
         cout << "============================================" << endl;
         cout << "Thank you for playing KlaKlok Dice V1!" << endl;
-        cout << "============================================" << endl;
+        cout << "============================================" << endl
+             << endl
+             << endl;
     }
 };
 
@@ -36,5 +39,17 @@ public:
         cout
             << msgFooter << endl
             << endl;
+    }
+
+    void randomDiceMsg(vector<int> diceValues)
+    {
+        headingMsg("KlaKlok-Dices Rolled Values");
+
+        for (int i = 0; i < diceValues.size(); i++)
+        {
+            cout << "=" + string(18, ' ') << diceValues[i] << string(18, ' ') + "=" << endl;
+        }
+
+        footerMsg("KlaKlok-Dices Rolled Values");
     }
 };
