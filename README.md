@@ -6,7 +6,7 @@ This C++ project is created for educational purpose at **[Paragon International 
 
 > [!IMPORTANT]
 >
-> **Lecturer:** Prof. Tin Hok
+> **Lecturer:** Mr. Tin Hok
 >
 > **Group 1** **Members:**
 >
