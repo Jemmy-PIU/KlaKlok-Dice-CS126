@@ -164,6 +164,13 @@ public:
         {
             Player &currentPlayer = this->players[i];
 
+            // Check if player has balance
+            if (currentPlayer.getBalance() <= 0)
+            {
+                cout << "Player " << i + 1 << " has no balance left!" << endl;
+                continue;
+            }
+
             // Check if player is betting
             cout << endl
                  << "=====> Player " << i + 1 << "'s turn <=====" << endl;
@@ -213,7 +220,7 @@ public:
                     }
                     else if (betAmount > currentPlayer.getBalance())
                     {
-                        cout << "Bet amount should be less than or equal to your balance!" << endl;
+                        cout << "Bet amount should be less than or equal to your balance! Player " << i + 1 << "'s balance: " << currentPlayer.getBalance() << endl;
                     }
                     else if (betAmount > currentPlayer.getCanBetAmount())
                     {
